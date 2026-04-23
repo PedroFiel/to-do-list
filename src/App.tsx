@@ -1,7 +1,9 @@
 import { TodoForm } from './components/TodoForm'
 import { TodoList } from './components/TodoList'
 import type { TodoItemData } from './components/TodoItem'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+const STORAGE_KEY = 'todos'
 
 const MOCK_TODOS: TodoItemData[] = [
   { id: '1', title: 'Revisar requisitos do trabalho', done: false },
@@ -9,8 +11,21 @@ const MOCK_TODOS: TodoItemData[] = [
   { id: '3', title: 'Definir contrato da API (futuro)', done: false },
 ]
 
+function loadTodos(): TodoItemData[] {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    return stored ? (JSON.parse(stored) as TodoItemData[]) : MOCK_TODOS
+  } catch {
+    return MOCK_TODOS
+  }
+}
+
 function App() {
-      const [todos, setTodos] = useState<TodoItemData[]>(MOCK_TODOS)
+      const [todos, setTodos] = useState<TodoItemData[]>(loadTodos)
+
+      useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+      }, [todos])
 
       function deleteTodo(id: string) {
         setTodos((prev) => prev.filter((item) => item.id !== id))
