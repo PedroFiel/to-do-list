@@ -1,20 +1,30 @@
+import { useState } from "react";
 import { TodoForm } from './components/TodoForm'
 import { TodoList } from './components/TodoList'
 import type { TodoItemData } from './components/TodoItem'
-import { useState } from 'react'
 
-const MOCK_TODOS: TodoItemData[] = [
+
+/*const MOCK_TODOS: TodoItemData[] = [
   { id: '1', title: 'Revisar requisitos do trabalho', done: false },
   { id: '2', title: 'Montar wireframe da lista de tarefas', done: true },
   { id: '3', title: 'Definir contrato da API (futuro)', done: false },
-]
+]*/
+
 
 function App() {
-      const [todos, setTodos] = useState<TodoItemData[]>(MOCK_TODOS)
+  const [todos, setTodos] = useState<TodoItemData[]>([]);
 
-      function deleteTodo(id: string) {
-        setTodos((prev) => prev.filter((item) => item.id !== id))
-      }
+  function addTask(title: string) {
+    if (!title.trim()) return;
+
+    const newTask: TodoItemData = {
+      id: crypto.randomUUID(),
+      title,
+      done: false,
+    };
+
+    setTodos((prev) => [...prev, newTask]);
+  }
 
   return (
     <div className="min-h-dvh bg-gradient-to-b from-slate-50 to-slate-100 text-slate-900">
@@ -32,24 +42,19 @@ function App() {
         </header>
 
         <main className="flex flex-1 flex-col">
-          <section
-            className="rounded-2xl border border-slate-200/80 bg-white/90 p-5 shadow-md shadow-slate-200/50 backdrop-blur-sm sm:p-6"
-            aria-labelledby="todo-form-heading"
-          >
-            <h2 id="todo-form-heading" className="sr-only">
-              Adicionar tarefa
-            </h2>
-            <TodoForm />
+          <section className="rounded-2xl border border-slate-200/80 bg-white/90 p-5 shadow-md shadow-slate-200/50 backdrop-blur-sm sm:p-6">
+            <TodoForm onAddTask={addTask} />
           </section>
 
-          <section className="mt-8 flex flex-1 flex-col" aria-labelledby="todo-list-heading">
+          <section className="mt-8 flex flex-1 flex-col">
             <div className="flex items-baseline justify-between gap-2">
-              <h2 id="todo-list-heading" className="text-lg font-semibold text-slate-900">
+              <h2 className="text-lg font-semibold text-slate-900">
                 Suas tarefas
               </h2>
-              <span className="text-xs text-slate-500">dados de exemplo</span>
+              <span className="text-xs text-slate-500">dinâmico</span>
             </div>
-            <TodoList items={todos} onDeleteTodo={deleteTodo} />
+
+            <TodoList items={todos} />
           </section>
         </main>
       </div>
@@ -57,4 +62,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
