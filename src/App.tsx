@@ -1,6 +1,7 @@
 import { TodoForm } from './components/TodoForm'
 import { TodoList } from './components/TodoList'
 import type { TodoItemData } from './components/TodoItem'
+import { useState } from 'react'
 
 const MOCK_TODOS: TodoItemData[] = [
   { id: '1', title: 'Revisar requisitos do trabalho', done: false },
@@ -9,6 +10,12 @@ const MOCK_TODOS: TodoItemData[] = [
 ]
 
 function App() {
+      const [todos, setTodos] = useState<TodoItemData[]>(MOCK_TODOS)
+
+      function deleteTodo(id: string) {
+        setTodos((prev) => prev.filter((item) => item.id !== id))
+      }
+
   return (
     <div className="min-h-dvh bg-gradient-to-b from-slate-50 to-slate-100 text-slate-900">
       <div className="mx-auto flex min-h-dvh max-w-lg flex-col px-4 py-10 sm:px-6 sm:py-14">
@@ -42,7 +49,7 @@ function App() {
               </h2>
               <span className="text-xs text-slate-500">dados de exemplo</span>
             </div>
-            <TodoList items={MOCK_TODOS} />
+            <TodoList items={todos} onDeleteTodo={deleteTodo} />
           </section>
         </main>
       </div>
