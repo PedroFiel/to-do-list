@@ -63,7 +63,11 @@ function IconTrash({ className }: { className?: string }) {
 const iconBtn =
   'inline-flex size-9 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
 
-export function TodoItem({ title, done }: TodoItemData) {
+type TodoItemProps = TodoItemData &{
+  onDelete: (id: string) => void
+}
+
+export function TodoItem({ id, title, done, onDelete}: TodoItemProps) {
   return (
     <article className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="min-w-0 flex-1">
@@ -87,7 +91,9 @@ export function TodoItem({ title, done }: TodoItemData) {
         <button type="button" className={iconBtn} aria-label="Editar tarefa">
           <IconPencil className="size-4" />
         </button>
-        <button type="button" className={iconBtn} aria-label="Excluir tarefa">
+        <button type="button" className={iconBtn} aria-label="Excluir tarefa"
+          onClick={()=> onDelete(id)}
+        >
           <IconTrash className="size-4" />
         </button>
       </div>
