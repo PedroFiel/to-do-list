@@ -1,7 +1,9 @@
-import { useState } from "react";
 import { TodoForm } from './components/TodoForm'
 import { TodoList } from './components/TodoList'
 import type { TodoItemData } from './components/TodoItem'
+import { useState, useEffect } from 'react'
+
+const STORAGE_KEY = 'todos'
 
 
 /*const MOCK_TODOS: TodoItemData[] = [
@@ -11,11 +13,25 @@ import type { TodoItemData } from './components/TodoItem'
 ]*/
 
 
+function loadTodos(): TodoItemData[] {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    return stored ? (JSON.parse(stored) as TodoItemData[]) : MOCK_TODOS
+  } catch {
+    return MOCK_TODOS
+  }
+}
+
 function App() {
   const [todos, setTodos] = useState<TodoItemData[]>([]);
 
   function addTask(title: string) {
     if (!title.trim()) return;
+      const [todos, setTodos] = useState<TodoItemData[]>(loadTodos)
+
+      useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+      }, [todos])
 
     const newTask: TodoItemData = {
       id: crypto.randomUUID(),
