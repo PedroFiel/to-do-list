@@ -31,6 +31,27 @@ function App() {
         setTodos((prev) => prev.filter((item) => item.id !== id))
       }
 
+      function toggleTodo(id: string) {
+        setTodos((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, done: !item.done } : item,
+          ),
+        )
+      }
+
+      function addTodo(title: string) {
+        setTodos((prev) => [
+          ...prev,
+          {
+            id: typeof crypto !== 'undefined' && 'randomUUID' in crypto
+              ? crypto.randomUUID()
+              : `${Date.now()}`,
+            title,
+            done: false,
+          },
+        ])
+      }
+
   return (
     <div className="min-h-dvh bg-gradient-to-b from-slate-50 to-slate-100 text-slate-900">
       <div className="mx-auto flex min-h-dvh max-w-lg flex-col px-4 py-10 sm:px-6 sm:py-14">
@@ -54,7 +75,7 @@ function App() {
             <h2 id="todo-form-heading" className="sr-only">
               Adicionar tarefa
             </h2>
-            <TodoForm />
+            <TodoForm onAddTask={addTodo} />
           </section>
 
           <section className="mt-8 flex flex-1 flex-col" aria-labelledby="todo-list-heading">
@@ -64,7 +85,11 @@ function App() {
               </h2>
               <span className="text-xs text-slate-500">dados de exemplo</span>
             </div>
-            <TodoList items={todos} onDeleteTodo={deleteTodo} />
+            <TodoList
+              items={todos}
+              onDeleteTodo={deleteTodo}
+              onToggleTodo={toggleTodo}
+            />
           </section>
         </main>
       </div>

@@ -63,11 +63,12 @@ function IconTrash({ className }: { className?: string }) {
 const iconBtn =
   'inline-flex size-9 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
 
-type TodoItemProps = TodoItemData &{
+type TodoItemProps = TodoItemData & {
   onDelete: (id: string) => void
+  onToggle: (id: string) => void
 }
 
-export function TodoItem({ id, title, done, onDelete}: TodoItemProps) {
+export function TodoItem({ id, title, done, onDelete, onToggle }: TodoItemProps) {
   return (
     <article className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <div className="min-w-0 flex-1">
@@ -81,18 +82,27 @@ export function TodoItem({ id, title, done, onDelete}: TodoItemProps) {
           {title}
         </p>
         {done ? (
-          <p className="mt-1 text-xs text-emerald-600">Concluída (exemplo)</p>
+          <p className="mt-1 text-xs text-emerald-600">Concluída</p>
         ) : null}
       </div>
       <div className="flex shrink-0 items-center gap-1">
-        <button type="button" className={iconBtn} aria-label="Concluir tarefa">
+        <button
+          type="button"
+          className={iconBtn}
+          aria-label={
+            done
+              ? 'Desmarcar tarefa como concluída'
+              : 'Marcar tarefa como concluída'
+          }
+          onClick={() => onToggle(id)}
+        >
           <IconCheck className="size-4" />
         </button>
         <button type="button" className={iconBtn} aria-label="Editar tarefa">
           <IconPencil className="size-4" />
         </button>
         <button type="button" className={iconBtn} aria-label="Excluir tarefa"
-          onClick={()=> onDelete(id)}
+          onClick={() => onDelete(id)}
         >
           <IconTrash className="size-4" />
         </button>
